@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Filament\Support\Assets\Js;
 
 class AppServiceProvider extends ServiceProvider
 {

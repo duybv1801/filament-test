@@ -11,7 +11,7 @@ use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
 use App\Filament\Pages\Auth\EditProfile;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable implements HasAvatar
 {
@@ -65,5 +65,10 @@ class User extends Authenticatable implements HasAvatar
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function remotes(): HasMany
+    {
+        return $this->hasMany(Remote::class);
     }
 }
