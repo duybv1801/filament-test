@@ -18,7 +18,6 @@ return new class extends Migration
             $table->text('value')->nullable();
             $table->json('attributes')->nullable();
             $table->string('type');
-
             $table->timestamps();
         });
 
@@ -79,32 +78,33 @@ return new class extends Migration
         ]);
 
         Setting::create([
-            'key' => 'basic_plan_price',
-            'label' => 'Basic Plan Price',
-            'value' => 1000,
-            'type' => 'number',
+            'key' => 'ot_night_start',
+            'label' => 'OT night time start',
+            'value' => null,
+            'type' => 'time',
         ]);
 
         Setting::create([
-            'key' => 'pro_plan_price',
-            'label' => 'Pro Plan Price',
-            'value' => 2000,
-            'type' => 'number',
+            'key' => 'ot_night_end',
+            'label' => 'OT night time end',
+            'value' => null,
+            'type' => 'time',
         ]);
 
-        Setting::create([
-            'key' => 'environment',
-            'label' => 'Environment',
-            'value' => 'production',
-            'type' => 'select',
-            'attributes' => [
-                'options' => [
-                    'production' => 'Production',
-                    'staging' => 'Staging',
-                    'local' => 'Local',
-                ],
-            ],
-        ]);
+
+        // Setting::create([
+        //     'key' => 'environment',
+        //     'label' => 'Environment',
+        //     'value' => 'production',
+        //     'type' => 'select',
+        //     'attributes' => [
+        //         'options' => [
+        //             'production' => 'Production',
+        //             'staging' => 'Staging',
+        //             'local' => 'Local',
+        //         ],
+        //     ],
+        // ]);
     }
 
     /**

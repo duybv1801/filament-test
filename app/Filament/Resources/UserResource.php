@@ -23,6 +23,18 @@ class UserResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 10 ? 'warning' : 'primary';
+    }
+
+    protected static ?string $navigationBadgeTooltip = 'The number of users';
+    
     public static function form(Form $form): Form
     {
         return $form

@@ -66,18 +66,4 @@ class User extends Authenticatable implements HasAvatar
     {
         return $this->belongsTo(Role::class);
     }
-
-    // public function getRoleIdAttribute($value)
-    // {
-    //     switch ($value) {
-    //         case 1:
-    //             return 'Admin';
-    //         case 2:
-    //             return 'Manager';
-    //         case 3:
-    //             return 'Member';
-    //         default:
-    //             return 'No role';
-    //     }
-    // }
 }
