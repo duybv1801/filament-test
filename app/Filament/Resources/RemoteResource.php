@@ -13,12 +13,17 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\User;
+use Closure;
+use Filament\Forms\Get;
+use Illuminate\Database\Eloquent\Model;
 
 class RemoteResource extends Resource
 {
     protected static ?string $model = Remote::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-s-home';
+
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
@@ -31,15 +36,23 @@ class RemoteResource extends Resource
                         'Not plan' => 'Not plan',
                     ])
                     ->native(false)
-                    ->required(),
+                    ->required()
+                    ->disabledOn('edit')
+                    ->rules([
+                        fn (Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                            if (isStartTimeBeforeNow($get('time_range')) && $value === 'Have plan') {
+                                $fail("The plan data is invalid.");
+                            }
+                        }]),
                 Forms\Components\Select::make('approver_id')
                     ->options(
                         User::query()->where('role_id', 1)
                                     ->orWhere('role_id', 2)
                                     ->pluck('name', 'id')
                     )
-                    ->required(),
-                
+                    ->required()
+                    ->label('Approver')
+                    ->disabledOn('edit'),
                 Forms\Components\Repeater::make('time_range')
                     ->schema([
                         Forms\Components\DatePicker::make('remotePeriods.date')
@@ -62,16 +75,19 @@ class RemoteResource extends Resource
                     ])->columns(3)
                     ->reorderable(false)
                     ->addActionLabel('Add time range')
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->visibleOn('create'),
                 Forms\Components\Textarea::make('reason')
                     ->required()
+                    ->disabledOn('edit')
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('remedies')
                     ->required()
+                    ->disabledOn('edit')
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('reject_reason')
                     ->columnSpanFull()
-                    ->visibleOn('approve'),
+                    ->hiddenOn('create'),
             ]);
     }
 
@@ -79,32 +95,45 @@ class RemoteResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('have_plan'),
-                Tables\Columns\TextColumn::make('approver_id')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->dateTime('d/m/Y')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('reason'),
+                Tables\Columns\TextColumn::make('approver.name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'Reject' => 'gray',
+                        'Wait confirm' => 'warning',
+                        'Confirmed' => 'success',
+                        'Cancel' => 'danger',
+                        'Wait censorship' => 'info',
+                    }),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        'Wait censorship' => 'Wait censorship',
+                        'Wait confirm' => 'Wait confirm',
+                        'Confirmed' => 'Confirmed',
+                        'Reject' => 'Reject',
+                        'Cancel' => 'Cancel',
+                    ]),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label('Approve'),
+                Tables\Actions\Action::make('Cancel')
+                    ->label('Cancel')
+                    ->color('danger')
+                    ->icon('heroicon-o-x-circle'),
+                ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                //
             ]);
     }
 
@@ -120,6 +149,7 @@ class RemoteResource extends Resource
         return [
             'index' => Pages\ListRemotes::route('/'),
             'create' => Pages\CreateRemote::route('/create'),
+            'view' => Pages\ViewRemote::route('/{record}'),
             'edit' => Pages\EditRemote::route('/{record}/edit'),
         ];
     }

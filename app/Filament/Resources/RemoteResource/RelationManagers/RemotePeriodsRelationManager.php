@@ -14,14 +14,10 @@ class RemotePeriodsRelationManager extends RelationManager
 {
     protected static string $relationship = 'remotePeriods';
 
+    protected static ?string $title = 'Remote Time';
     public function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('date')
-                    ->required()
-                    ->maxLength(255),
-            ]);
+        return null;
     }
 
     public function table(Table $table): Table
@@ -29,22 +25,25 @@ class RemotePeriodsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('date')
             ->columns([
-                Tables\Columns\TextColumn::make('date'),
+                Tables\Columns\TextColumn::make('date')
+                    ->dateTime('d/m/Y')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('start'),
+                Tables\Columns\TextColumn::make('end'),
+                Tables\Columns\TextColumn::make('total')
+                    ->suffix(' h'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+               //
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                //
             ]);
     }
 }

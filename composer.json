@@ -27,7 +27,8 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Helpers/CalTimeHelper.php"
+            "app/Helpers/CalTimeHelper.php",
+            "app/Helpers/IsTimeBeforeNow.php"
         ]
     },
     "autoload-dev": {
@@ -35,7 +36,8 @@
             "Tests\\": "tests/"
         },
         "files": [
-            "app/Helpers/CalTimeHelper.php"
+            "app/Helpers/CalTimeHelper.php",
+            "app/Helpers/IsTimeBeforeNow.php"
         ]
     },
     "scripts": {
