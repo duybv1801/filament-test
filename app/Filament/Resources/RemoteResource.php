@@ -125,8 +125,6 @@ class RemoteResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make()
-                    ->label('Approve'),
                 Tables\Actions\Action::make('Cancel')
                     ->label('Cancel')
                     ->color('danger')
@@ -150,7 +148,6 @@ class RemoteResource extends Resource
             'index' => Pages\ListRemotes::route('/'),
             'create' => Pages\CreateRemote::route('/create'),
             'view' => Pages\ViewRemote::route('/{record}'),
-            'edit' => Pages\EditRemote::route('/{record}/edit'),
         ];
     }
 }
