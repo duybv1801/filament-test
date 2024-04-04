@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('reason');
             $table->text('remedies');
             $table->text('reject_reason')->nullable();
-            $table->enum('status', ['Wait censorship', 'Wait confirm', 'Confirmed', 'Reject', 'Cancel']);
+            $table->enum('status', ['Pending', 'Wait confirm', 'Confirmed', 'Reject', 'Cancel']);
             $table->timestamps();
         });
     }

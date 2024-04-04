@@ -110,13 +110,13 @@ class RemoteResource extends Resource
                         'Wait confirm' => 'warning',
                         'Confirmed' => 'success',
                         'Cancel' => 'danger',
-                        'Wait censorship' => 'info',
+                        'Pending' => 'info',
                     }),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
-                        'Wait censorship' => 'Wait censorship',
+                        'Pending' => 'Pending',
                         'Wait confirm' => 'Wait confirm',
                         'Confirmed' => 'Confirmed',
                         'Reject' => 'Reject',
