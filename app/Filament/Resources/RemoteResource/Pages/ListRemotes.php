@@ -25,6 +25,10 @@ class ListRemotes extends ListRecords
     public function getTabs(): array
     {
         $userId = auth()->id();
+        if(auth()->user()->hasRole('Admin')){
+            return [];
+        }
+
         return [
             'My form' => Tab::make()
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('user_id', $userId)),

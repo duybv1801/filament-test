@@ -71,4 +71,9 @@ class User extends Authenticatable implements HasAvatar
     {
         return $this->hasMany(Remote::class);
     }
+
+    public function hasRole($role): bool
+    {
+        return $this->role()->where('role', $role)->exists();
+    }
 }

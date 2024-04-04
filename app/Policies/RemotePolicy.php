@@ -21,7 +21,7 @@ class RemotePolicy
      */
     public function view(User $user, Remote $remote): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -29,7 +29,7 @@ class RemotePolicy
      */
     public function create(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -37,7 +37,7 @@ class RemotePolicy
      */
     public function update(User $user, Remote $remote): bool
     {
-        //
+        return true;
     }
 
     /**
