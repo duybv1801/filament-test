@@ -21,9 +21,16 @@ class RemoteResource extends Resource
 {
     protected static ?string $model = Remote::class;
 
+    // protected static ?string $navigationGroup = 'Remote';
+
     protected static ?string $navigationIcon = 'heroicon-s-home';
 
     protected static ?int $navigationSort = 3;
+
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     return static::getModel()::query()->where('status', 'Pending')->orWhere('status', 'Wait confirm')->count();
+    // }
 
     public static function form(Form $form): Form
     {
