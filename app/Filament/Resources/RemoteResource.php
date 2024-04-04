@@ -16,6 +16,7 @@ use App\Models\User;
 use Closure;
 use Filament\Forms\Get;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Forms\Components\DatePicker;
 
 class RemoteResource extends Resource
 {
@@ -129,6 +130,22 @@ class RemoteResource extends Resource
                         'Reject' => 'Reject',
                         'Cancel' => 'Cancel',
                     ]),
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        DatePicker::make('created_from'),
+                        DatePicker::make('created_until'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
